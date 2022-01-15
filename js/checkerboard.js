@@ -80,6 +80,7 @@ function countNeighbors() {
 	
 	var svg = d3.select("svg");
 	var boardDimension = Math.sqrt(svg.selectAll("rect").nodes().length);	
+	
 	var board=[];
     
 	for (let ri=0; ri<(boardDimension*boardDimension);ri++) {
@@ -87,6 +88,8 @@ function countNeighbors() {
 	    var focal_cell = d3.select(svg.selectAll("rect").nodes()[ri]);
 	    var xi = focal_cell.attr("x")/focal_cell.attr("fieldSize");
 	    var yi = focal_cell.attr("y")/focal_cell.attr("fieldSize");
+	    
+	    
 	    
 	    var N=0;
 	    var Nr=0;
@@ -103,7 +106,7 @@ function countNeighbors() {
 							// determine index of neighbor:
 							var index = (yi + j)*boardDimension + (xi + i);
 							
-							if ((index > 0) && (index < boardDimension*boardDimension)) {
+							if ((index >= 0) && (index < boardDimension*boardDimension)) {
 								var neighbor_cell = d3.select(svg.selectAll("rect").nodes()[index]);
 								if (neighbor_cell.attr('color') > 0 ) {
 									N++;
@@ -119,7 +122,7 @@ function countNeighbors() {
 				}				
 			}
 		}
-		
+				
 		var status = (rule(focal_cell.attr("color"),N,Nr,Nb) > 0) ? "\u2713" : "x";
 						
 		board.push({
@@ -152,9 +155,10 @@ function countNeighbors() {
 	        if (board[index].s == "x") {
 		        return "white";
 	        } else {
+		        // this is a checkmark cell:
 		        var focal_cell = d3.select(svg.selectAll("rect").nodes()[index]);		
-				if (focal_cell.attr("color") == 0){
-					if (Nr > Nb) {
+				if (focal_cell.attr("color") == 0){					
+					if (board[index].nr > board[index].nb) {
 						return "red";
 					} else {
 						return "#0096ff";
@@ -167,9 +171,11 @@ function countNeighbors() {
     	.text(function(d,i,element){
 	    	if (document.getElementById("cheating").value == "ON"){
 		    	var index = (d.y)*boardDimension + (d.x);
+		    	
+		    	var string = board[index].s + "-" + board[index].n;
 	    		    	
 		    	// change to check mark
-		    	return board[index].s;
+		    	return string;
 	    	}
     	});
 
