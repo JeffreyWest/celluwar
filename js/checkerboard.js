@@ -1,8 +1,6 @@
 function setupBoard() {
 	
 	var myWidth =document.getElementById("game-div").offsetWidth;
-	console.log(myWidth);
-
 	
 	var marginTop = 30,
         marginLeft = 30,
@@ -55,48 +53,26 @@ function setupBoard() {
          .attr("height", fieldSize + "px")
          .style("fill", 0)
          .attr("stroke", "white")
+         .attr('stroke-width', '3')
          .on('click' , function(d){ 
 	          d3.select(this)
 		      	.attr("fill", function(d) {
 			      	
-			      	if (!checkIfColor(this,1)) {
+			      	if (!(d3.select(this).attr("color") == 1)) {
+				      	var button_status = document.getElementById("game-button").name;
 				      	
-				      	switchColor(1, d3.select(this));
-			        	countNeighbors();
-			        	
-			        	bluesTurn();
-			        	
-			        	window.setTimeout(function() {
-						  computerMove();
-						  countNeighbors();
-						  window.setTimeout(function() {
-							  golTurn();
-							  window.setTimeout(function() {
-								  refreshWorld(svg,boardDimension,fieldSize);
-								  setWorld(svg,boardDimension);
-								  countNeighbors();
-								  redsTurn();
-								}, 1000); // time for GOL	
-							}, 1000); // time to switch to GOL indicator
-						}, 1500); // time for blue turn
+				      	if ((button_status == "new-game") || (button_status == "make-your-move") || (button_status = "red-selection-made")) {
+					      	switchColor(1, d3.select(this), true);
+				        	countNeighbors();
+				        	document.getElementById("game-button").name = "red-selection-made";				        	
+				        	nextState(true);	
+				      	}
 			      	}
 			    })
 	         });
 	         
-	    
-	         
-	    svg.append("text");
-
-		newBoard();
-		
-}
-
-function checkIfColor(elem,i) {
-	if (d3.select(elem).attr("color") == i) {
-		return true;
-	} else {
-		return false;
-	}
+	    svg.append("text");		
+	    newBoard();
 }
 
 // count neighbors, but don't change based on rules:
@@ -108,12 +84,10 @@ function countNeighbors() {
     
 	for (let ri=0; ri<(boardDimension*boardDimension);ri++) {
 	    
-	    // check if this element is already blue:
 	    var focal_cell = d3.select(svg.selectAll("rect").nodes()[ri]);
 	    var xi = focal_cell.attr("x")/focal_cell.attr("fieldSize");
 	    var yi = focal_cell.attr("y")/focal_cell.attr("fieldSize");
 	    
-	    	    
 	    var N=0;
 	    var Nr=0;
 	    var Nb=0;
@@ -123,7 +97,6 @@ function countNeighbors() {
 				if ((i == 0) && (j==0)) {
 					// exclude self
 				} else {
-					
 					// exclude going off the edges:
 					if (((yi + j) < boardDimension) && ((yi + j) >= 0)) {
 						if (((xi + i) < boardDimension) && ((xi + i) >= 0)) {
@@ -147,8 +120,6 @@ function countNeighbors() {
 			}
 		}
 		
-// 		console.log(N + "-" + Nr + "-" + Nb);
-		
 		var status = (rule(focal_cell.attr("color"),N,Nr,Nb) > 0) ? "\u2713" : "x";
 						
 		board.push({
@@ -160,17 +131,12 @@ function countNeighbors() {
             nr: Nr,
             s : status
         });
-		
-		
 	}    
-    
     
     svg.data(board)
     	.enter();
     	
 	var fieldSize = d3.select(svg.selectAll("rect").nodes()[0]).attr("fieldSize");
-
-    
     svg.selectAll("text")
     	.style("font-size", "20")
         .attr("text-anchor", "middle")
@@ -191,15 +157,12 @@ function countNeighbors() {
 					if (Nr > Nb) {
 						return "red";
 					} else {
-						return "blue";
+						return "#0096ff";
 					}
 				} else {
 			        return "white";
 		        }
 	        }
-	        
-	        
-    		
         })
     	.text(function(d,i,element){
 	    	if (document.getElementById("cheating").value == "ON"){
@@ -235,9 +198,15 @@ function rule(c,n,nr,nb){
 	if ((c==0) && (n==3)) {
 		return (nr > nb) ? 1 : 2;
 	}
+	
+	return 0;
 }
 
-function refreshWorld(svg,boardDimension,fieldSize) {
+// check all cells, change "next-color" according to rules of G.o.L.
+function refreshWorld() {
+	
+	var svg = d3.select("svg");
+	var boardDimension = Math.sqrt(svg.selectAll("rect").nodes().length);
 	
 	var board = countNeighbors();
 	    
@@ -250,52 +219,93 @@ function refreshWorld(svg,boardDimension,fieldSize) {
 }
 
 // set each cell's color to next-color
-function setWorld(svg,boardDimension) {
+function setWorld() {
+	var svg = d3.select("svg");
+	var boardDimension = Math.sqrt(svg.selectAll("rect").nodes().length);
 	// pass next-color into color, and change color:
 	for (let ri=0; ri<(boardDimension*boardDimension);ri++) {
 		// set color to next color attribute.
 		var focal_cell = d3.select(svg.selectAll("rect").nodes()[ri]);
-		
-		switchColor(focal_cell.attr('next-color'), focal_cell);	
+		switchColor(focal_cell.attr('next-color'), focal_cell, false);	
+	}
+}
+
+function makeAllDark() {
+	// switch all to dark colors:
+	var svg = d3.select("svg");
+	var boardDimension = Math.sqrt(svg.selectAll("rect").nodes().length);
+	// pass next-color into color, and change color:
+	for (let ri=0; ri<(boardDimension*boardDimension);ri++) {
+		// set color to next color attribute.
+		var focal_cell = d3.select(svg.selectAll("rect").nodes()[ri]);
+		switchColor(focal_cell.attr('color'), focal_cell, false);	
 	}
 }
 
 // computer's move:
 function computerMove() {
-	
-	// check if game is won:
-// 	var game_state = checkGameOver(svg,boardDimension);
-	
-	
-    
     var svg = d3.select("svg");
 	var boardDimension = Math.sqrt(svg.selectAll("rect").nodes().length);
-	
 	var ri = Math.floor(Math.random()*boardDimension*boardDimension);
 
     // check if this element is already blue:
     var element = svg.selectAll("rect").nodes()[ri];
-    
-    
-    
-    if (!checkIfColor(element,2)) {
-	    switchColor(2, d3.select(element));
+    if (!(d3.select(element).attr("color") == 2)) {
+	    switchColor(2, d3.select(element), true);
     } else {
 	    computerMove();
     }
-
 }
 
-function switchColor(i, rectangle) {
-	var colors = ["black","red","blue"];
+function removeLightReds(colors){
+	// set color to old color, dark version (don't need to change 
+	var svg = d3.select("svg");
+		var boardDimension = Math.sqrt(svg.selectAll("rect").nodes().length);
+		// pass next-color into color, and change color:
+		for (let ri=0; ri<(boardDimension*boardDimension);ri++) {
+			var focal_cell = d3.select(svg.selectAll("rect").nodes()[ri]);
+			var old_color = focal_cell.attr("old-color");
+			if (old_color) {
+				console.log(old_color)
+			
+				focal_cell.style("fill",colors[old_color])
+					.attr("color", old_color);
+			}
+			
+		}
+}
+
+function switchColor(i, rectangle, temporary) {
+	var colors = ["#212121","red","blue"];
 	
-	rectangle.style("fill",colors[i])
+	if (temporary) {
+		
+		// if this is a temp selection, remove all previous "light colored"
+		removeLightReds(colors);
+		var old_color = rectangle.attr("color");
+		
+		
+		colors = ["#212121","#ff2f92","#0096ff"];
+		rectangle.style("fill",colors[i])
+			.attr("old-color", old_color)
+			.attr("color", i);
+		
+	} else {
+		rectangle.style("fill",colors[i])
 			  .attr("color", i);
+	}
+		
+	
 }
 
-function checkGameOver(svg,boardDimension) {
+function checkGameOver() {
 	var reds = 0;
 	var blues = 0;
+	
+	var game_is_over = false;
+	
+	var svg = d3.select("svg");
+	var boardDimension = Math.sqrt(svg.selectAll("rect").nodes().length);
 	
 	for (let ri=0; ri<(boardDimension*boardDimension);ri++) {
 		// set color to next color attribute.
@@ -309,68 +319,127 @@ function checkGameOver(svg,boardDimension) {
 	}
 	
 	if (reds + blues == 0) {
-		// both lost
-		nextState('You lost!');
-		
-		return 3;
+		document.getElementById("instructions").innerHTML = "YOU LOST! No red cells left."
+		game_is_over = true;
 	} else if (reds == 0) {
-		// red lost
-		nextState('You lost!');
-		
-		return 1;
+		document.getElementById("instructions").innerHTML = "YOU LOST! Blue has 100% of remaining alive cells."
+		game_is_over = true;
 	} else if (blues == 0) {
-		// blue lost
-		nextState('You won!');
-		
-		return 2;
+		document.getElementById("instructions").innerHTML = "YOU WON! Congratulations."
+		game_is_over = true;
 	}
 	
-	
-	
-	return 0;
-	
+	if (game_is_over){
+		// change state to new game:
+		// switch from black to green
+		var element = document.getElementById("game-button");
+		element.classList.remove("btn-dark");
+		element.classList.remove("btn-light");
+		element.classList.add("btn-success");
+		element.value = "New Game";
+		element.name = "new-game";
+	}
 }
 
 
-function redsTurn() {
-	document.getElementById("game-turn").innerHTML = 
-			"It is currently: <span style='color: red; text-decoration: underline;'>Red's turn</span> ..... <span style='color: #dedede'>Blue's turn</span> ..... <span style='color: #dedede'>Game of Life</span>";
-}
-
-function bluesTurn() {
-	document.getElementById("game-turn").innerHTML = 
-			"It is currently: <span style='color: #dedede'>Red's turn</span> ..... <span style='color: blue; text-decoration: underline;'>Blue's turn</span> ..... <span style='color: #dedede'>Game of Life</span>";
-}
-
-function golTurn() {
-	document.getElementById("game-turn").innerHTML = 
-			"It is currently: <span style='color: #dedede'>Red's turn</span> ..... <span style='color: #dedede'>Blue's turn</span> ..... <span style='color: black;  text-decoration: underline;'>Game of Life</span>";
-}
-
-
-
-function myToggle(button) {
-	var myButton = document.getElementById("cheating").value;
-	
-	document.getElementById("cheating").value = (myButton == "OFF") ? "ON" : "OFF";
-	countNeighbors();
-}
 
 // new game, end turn, 
 
-function nextState(next_state) {
-	
-		document.getElementById("game-button").value = next_state;
-
-	
-// 	possible states:
-// You won!
-// You lost!
+function nextState(duplicate_selection) {
+	// if myCall == 1, then it's a new game
+	// if myCall == 2, then red has made a selection
 	
 	
-// 	new-game
+	var current_state = document.getElementById("game-button").name;
 	
-	newBoard();
+	
+	if (current_state == "new-game") {
+		// leave state the same ("New Game"):
+		newBoard();
+	} else if (current_state == "red-selection-made") {
+		if ((document.getElementById("game-button").value == "New Game") || (document.getElementById("game-button").value == "Waiting...") || (duplicate_selection)) {
+			console.log("user has made selection but not finalized it yet");
+						
+			// switch from green to red
+			var element = document.getElementById("game-button");
+			element.classList.remove("btn-success");
+			element.classList.remove("btn-light");
+			element.classList.add("btn-danger");
+			element.value = "End Turn";
+			
+			// instructions:
+			document.getElementById("instructions").innerHTML = "End your turn by clicking the button above."
+			
+			
+			
+			
+		} else {
+			console.log("user has made selection and is ending their turn");
+			
+			makeAllDark();
+			
+			// switch from red to blue
+			var element = document.getElementById("game-button");
+			element.classList.remove("btn-danger");
+			element.classList.remove("btn-light");
+			element.classList.add("btn-primary");
+			element.value = "End Computer's Turn";
+			element.name = "blue-selection-made";
+			
+			// instructions:
+			document.getElementById("instructions").innerHTML = "Wait for blue to make a move, then click the button to end your opponent's turn."
+			
+			// make blue's move
+			window.setTimeout(function() {
+			  computerMove();
+			  countNeighbors();
+			}, 500);
+		}		
+	} else if (current_state == "blue-selection-made") {
+		console.log("computer has made selection and user is ending computer turn");
+		
+		
+		makeAllDark();
+		
+		// switch from blue to black
+		var element = document.getElementById("game-button");
+		element.classList.remove("btn-primary");
+		element.classList.add("btn-dark");
+		element.value = "Simulate Conway's G.o.L.";
+		
+		// change state:
+		document.getElementById("game-button").name = "gol-ready";
+		
+		// instructions:
+		document.getElementById("instructions").innerHTML = "Click the button to simulate Conway's Game of Life (1 iteration)."
+		
+	} else if (current_state == "gol-ready") {
+		console.log("user has opted to simulate game of life");
+		
+		// switch from black to red
+		var element = document.getElementById("game-button");
+		element.classList.remove("btn-dark");
+		element.classList.add("btn-light");
+		element.value = "Waiting...";
+		
+		document.getElementById("game-button").name = "make-your-move";
+		document.getElementById("instructions").innerHTML = "Make a move by clicking on a <span style='color: black;  text-decoration: underline;'>black</span> or <span style='color: blue;  text-decoration: underline;'>blue</span> square."
+		
+		
+		window.setTimeout(function() {
+		  refreshWorld();
+		  setWorld();
+		  countNeighbors();
+		  checkGameOver();
+		}, 500);	
+		
+		
+		// 
+		
+	}	else if (current_state == "make-your-move") {
+		console.log("make your move has triggered");
+		alert("Please make a selection by clicking on a black or blue square.");
+	}
 }
 
 
@@ -385,11 +454,17 @@ function newBoard() {
 	    
 	    if (Math.random() < 0.25) {
 		    var color = (Math.random() < 0.5) ? 1 : 2;
-			switchColor(color , focal_cell);	
+			switchColor(color , focal_cell, false);	
 	    } else {
-		    switchColor(0 , focal_cell);	
+		    switchColor(0 , focal_cell, false);	
 	    }
 	}
+	countNeighbors();
+}
+function hintToggle() {
+	var myButton = document.getElementById("cheating").value;
+	
+	document.getElementById("cheating").value = (myButton == "OFF") ? "ON" : "OFF";
 	countNeighbors();
 }
 

@@ -35,42 +35,70 @@
 	
 	<div class="main" id="main">
 	
-		<h1> Celluwar </h1>
-		<div class="row">
-			<div class="col-6 text-justify">
-				<h3> The Rules </h3>
-		<p> This is a game based on Conway's Game of Life. Cells that have 2 or 3 neighbors survive (and remain the same color). Cells with fewer than 2 or more than 3 neighbors die due to under- or over-population, respectively. Empty locations (black) that have exactly 3 neighbors reproduce a daughter cell that is the color of the majority (red or blue) in that location's neighborhood.
-		</p>
+		<h1 style="margin-bottom: 30px;"> CelluWar </h1>
 		
-		<p>
-			The game can only end after the Game of Life is Simulated.
-		</p>
+		<div class="row">
+			<div class="col-8 text-justify">
+				
+				<h3> The Rules </h3>
+				<hr>
+				<p> <span style="font-weight: bold;">CelluWar</span> is a game based on Conway's Game of Life. Cells that have 2 or 3 neighbors survive (and remain the same color). Cells with fewer than 2 or more than 3 neighbors die due to under- or over-population, respectively. Empty locations (black) that have exactly 3 neighbors reproduce a daughter cell that is the color of the majority (red or blue) in that location's neighborhood.
+				</p>
+				
+				<p>
+					The game has three steps: 
+					<ol>
+						<li><span style="font-weight: bold;">Your move</span>: select a square to turn <span style="color: red;  text-decoration: underline;">red</span>.</li>
+						<li><span style="font-weight: bold;">Computer's move</span>: computer selects a square to turn <span style="color: blue;  text-decoration: underline;">blue</span>.</li>
+						<li><span style="font-weight: bold;">Conway's move</span>: Conway's Game of Life is simulated (1 step).</li>
+					</ol>
+					
+					
+				</p>
+				
+				<p>
+					The objective is to remove all the <span style="color: blue;  text-decoration: underline;">blue</span> cells from the board, while at least one <span style="color: red;  text-decoration: underline;">red</span> cell remains alive. The game can only end after the Game of Life is Simulated.
+				</p>
 			</div>
 		</div>
 
-		<div class="row">
-			<div class="col-6">
+		<div class="row" style="margin-top: 30px;">
+			<div class="col-8 text-justify">
 				<h3> Enable Hints </h3>
-				<p>Toggle the switch on and off below, to show hints.</p>
+				<hr>
 				<div>
 					<label class="switch">
-					  <input type="checkbox" id="cheating" value="OFF" onclick="myToggle(this);">
+					  <input type="checkbox" id="cheating" value="OFF" onclick="hintToggle();">
 					  <div class="slider round"></div>
 					</label>
 				</div>
+				<p>Toggle the switch on and off, to show hints. All squares that will be dead (empty) are marked with an "x" while squares that will be alive are marked with a "✓" in the corresponding color ("<span style='color: blue;'>✓</span>" or "<span style='color: red;'>✓</span>").</p>
 				
-				<input type="button" id="game-button" value="New Game" class="btn btn-primary btn-lg" onclick="nextState('New Game')"></input>
+				
 			</div>
 		</div>		
-		<div class="row">
-			<div class="col-6 text-justify" id="game-div">
-		
+		<div class="row" style="margin-top: 30px;">
+			<div class="col-8 text-justify" id="game-div">
+				<h3> Game Board </h3>
+				<hr>
 				
-				<p id="game-turn"> It is currently: <span style="color: red;  text-decoration: underline;">Red's turn</span> ..... <span style="color: #dedede";>Blue's turn</span> ..... <span style="color: #dedede">Game of Life</span> </p>
-				
-				<div class="board">
+				<div class="row">
+					<div class="col-12">
+						<input type="button" id="game-button" name="new-game" value="New Game" class="btn btn-success btn-lg" onclick="nextState()"></input> 
+					</div>
 				</div>
-			
+				<div class="row" style="margin-top: 15px;">
+					<div class="col-12" id="instructions">
+						Make a move by clicking on a <span style="color: black;  text-decoration: underline;">black</span> or <span style="color: blue;  text-decoration: underline;">blue</span> square.
+					</div>
+				</div>
+				<div class="row" style="margin-top: 30px;">
+					<div class="col-12">
+						<div class="board">
+							<!-- Game board will be rendered here (d3.js) -->
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		
