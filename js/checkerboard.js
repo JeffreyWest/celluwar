@@ -1,6 +1,6 @@
 function setupBoard() {
 	
-	var myWidth =document.getElementById("game-div").offsetWidth;
+	var myWidth =document.getElementById("game-div").offsetWidth*0.95;
 	
 	var marginTop = 30,
         marginLeft = 30,
@@ -325,13 +325,13 @@ function checkGameOver() {
 	}
 	
 	if (reds + blues == 0) {
-		document.getElementById("instructions").innerHTML = "YOU LOST! No red cells left."
+		document.getElementById("instructions").innerHTML = "<p>YOU LOST! No red cells left.</p>"
 		game_is_over = true;
 	} else if (reds == 0) {
-		document.getElementById("instructions").innerHTML = "YOU LOST! Blue has 100% of remaining alive cells."
+		document.getElementById("instructions").innerHTML = "<p>YOU LOST! Blue has 100% of remaining alive cells.</p>"
 		game_is_over = true;
 	} else if (blues == 0) {
-		document.getElementById("instructions").innerHTML = "YOU WON! Congratulations."
+		document.getElementById("instructions").innerHTML = "<p>YOU WON! Congratulations.</p>"
 		game_is_over = true;
 	}
 	
@@ -374,7 +374,7 @@ function nextState(duplicate_selection) {
 			element.value = "End Turn";
 			
 			// instructions:
-			document.getElementById("instructions").innerHTML = "End your turn by clicking the button above."
+			document.getElementById("instructions").innerHTML = "<p>End your turn by clicking the button above.</p>"
 			
 			
 			
@@ -393,7 +393,7 @@ function nextState(duplicate_selection) {
 			element.name = "blue-selection-made";
 			
 			// instructions:
-			document.getElementById("instructions").innerHTML = "Wait for blue to make a move, then click the button to end your opponent's turn."
+			document.getElementById("instructions").innerHTML = "<p>Wait for blue to make a move, then click the button to end your opponent's turn.</p>"
 			
 			// make blue's move
 			window.setTimeout(function() {
@@ -417,7 +417,7 @@ function nextState(duplicate_selection) {
 		document.getElementById("game-button").name = "gol-ready";
 		
 		// instructions:
-		document.getElementById("instructions").innerHTML = "Click the button to simulate Conway's Game of Life (1 iteration)."
+		document.getElementById("instructions").innerHTML = "<p>Click the button to simulate Conway's Game of Life (1 iteration).</p>"
 		
 	} else if (current_state == "gol-ready") {
 		console.log("user has opted to simulate game of life");
@@ -429,7 +429,7 @@ function nextState(duplicate_selection) {
 		element.value = "Waiting...";
 		
 		document.getElementById("game-button").name = "make-your-move";
-		document.getElementById("instructions").innerHTML = "Make a move by clicking on a <span style='color: black;  text-decoration: underline;'>black</span> or <span style='color: blue;  text-decoration: underline;'>blue</span> square."
+		document.getElementById("instructions").innerHTML = "<p>Make a move by clicking on a <span style='color: black;  text-decoration: underline;'>black</span> or <span style='color: blue;  text-decoration: underline;'>blue</span> square.</p>"
 		
 		
 		window.setTimeout(function() {
