@@ -1,6 +1,6 @@
 function setupBoard() {
 	
-	var myWidth =document.getElementById("game-div").offsetWidth*0.95;
+	var myWidth =document.getElementById("game-div").offsetWidth*0.92;
 	
 	var marginTop = 30,
         marginLeft = 30,
