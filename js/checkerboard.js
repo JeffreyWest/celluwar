@@ -101,11 +101,11 @@ function countNeighbors() {
 					if (((yi + j) < boardDimension) && ((yi + j) >= 0)) {
 						if (((xi + i) < boardDimension) && ((xi + i) >= 0)) {
 							// determine index of neighbor:
-							var index = (yi + j)*boardDimension + (xi + i);
+							var index = Math.round((yi + j)*boardDimension + (xi + i));
 							
 							if ((index >= 0) && (index < boardDimension*boardDimension)) {
 								var neighbor_cell = d3.select(svg.selectAll("rect").nodes()[index]);
-								if (neighbor_cell.attr('color') > 0 ) {
+								if (neighbor_cell.attr("color") > 0 ) {
 									N++;
 									if (neighbor_cell.attr('color') == 1) {
 										Nr++;
@@ -147,7 +147,7 @@ function countNeighbors() {
 	        return ( (fieldSize*0.5) + fieldSize*(d.x) + "px");
         })
         .attr("fill", function(d,i) {
-	        var index = (d.y)*boardDimension + (d.x);
+	        var index = Math.round((d.y)*boardDimension + (d.x));
 	        
 	        if (board[index].s == "x") {
 		        return "white";
@@ -167,7 +167,7 @@ function countNeighbors() {
         })
     	.text(function(d,i,element){
 	    	if (document.getElementById("cheating").value == "ON"){
-		    	var index = (d.y)*boardDimension + (d.x);
+		    	var index = Math.round((d.y)*boardDimension + (d.x));
 		    	
 		    	var string = board[index].s;// + "-" + board[index].n;
 	    		    	
