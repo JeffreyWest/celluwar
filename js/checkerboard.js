@@ -89,8 +89,6 @@ function countNeighbors() {
 	    var xi = focal_cell.attr("x")/focal_cell.attr("fieldSize");
 	    var yi = focal_cell.attr("y")/focal_cell.attr("fieldSize");
 	    
-	    
-	    
 	    var N=0;
 	    var Nr=0;
 	    var Nb=0;
@@ -213,9 +211,7 @@ function refreshWorld() {
 	
 	var svg = d3.select("svg");
 	var boardDimension = Math.sqrt(svg.selectAll("rect").nodes().length);
-	
-	var board = countNeighbors();
-	    
+	var board = countNeighbors();	    
 	for (let ri=0; ri<(boardDimension*boardDimension);ri++) {
 		var focal_cell = d3.select(svg.selectAll("rect").nodes()[ri]);		
 		next_color = rule(focal_cell.attr('color'), board[ri].n, board[ri].nr, board[ri].nb);
@@ -234,6 +230,7 @@ function setWorld() {
 		var focal_cell = d3.select(svg.selectAll("rect").nodes()[ri]);
 		switchColor(focal_cell.attr('next-color'), focal_cell, false);	
 	}
+	countNeighbors();
 }
 
 function makeAllDark() {
@@ -336,14 +333,11 @@ function checkGameOver() {
 	}
 	
 	if (game_is_over){
-		// change state to new game:
-		// switch from black to green
-		var element = document.getElementById("game-button");
-		element.classList.remove("btn-dark");
-		element.classList.remove("btn-light");
-		element.classList.add("btn-success");
-		element.value = "New Game";
-		element.name = "new-game";
+		// switch  to green
+		updateGameButton("btn-success", "New Game");
+		
+		// change state:
+		document.getElementById("game-button").name = "new-game";
 	}
 }
 
@@ -352,26 +346,24 @@ function checkGameOver() {
 // new game, end turn, 
 
 function nextState(duplicate_selection) {
-	// if myCall == 1, then it's a new game
-	// if myCall == 2, then red has made a selection
-	
-	
+
+		
 	var current_state = document.getElementById("game-button").name;
-	
 	
 	if (current_state == "new-game") {
 		// leave state the same ("New Game"):
 		newBoard();
 	} else if (current_state == "red-selection-made") {
-		if ((document.getElementById("game-button").value == "New Game") || (document.getElementById("game-button").value == "Waiting...") || (duplicate_selection)) {
+		
+		
+		if ((document.getElementById("game-button").value == "New Game") || (document.getElementById("game-button").value == "Please make a move...") || (duplicate_selection)) {
 			console.log("user has made selection but not finalized it yet");
 						
-			// switch from green to red
-			var element = document.getElementById("game-button");
-			element.classList.remove("btn-success");
-			element.classList.remove("btn-light");
-			element.classList.add("btn-danger");
-			element.value = "End Turn";
+			// switch to red
+			updateGameButton("btn-danger", "End Turn");
+			
+			// change state:
+			// ?????
 			
 			// instructions:
 			document.getElementById("instructions").innerHTML = "<p>End your turn by clicking the button above.</p>"
@@ -384,13 +376,11 @@ function nextState(duplicate_selection) {
 			
 			makeAllDark();
 			
-			// switch from red to blue
-			var element = document.getElementById("game-button");
-			element.classList.remove("btn-danger");
-			element.classList.remove("btn-light");
-			element.classList.add("btn-primary");
-			element.value = "End Computer's Turn";
-			element.name = "blue-selection-made";
+			// switch to blue
+			updateGameButton("btn-primary", "End Computer's Turn");
+			
+			// change state:
+			document.getElementById("game-button").name = "blue-selection-made";
 			
 			// instructions:
 			document.getElementById("instructions").innerHTML = "<p>Wait for blue to make a move, then click the button to end your opponent's turn.</p>"
@@ -407,11 +397,8 @@ function nextState(duplicate_selection) {
 		
 		makeAllDark();
 		
-		// switch from blue to black
-		var element = document.getElementById("game-button");
-		element.classList.remove("btn-primary");
-		element.classList.add("btn-dark");
-		element.value = "Simulate Conway's G.o.L.";
+		// switch to black
+		updateGameButton("btn-dark", "Simulate Conway's G.o.L.");
 		
 		// change state:
 		document.getElementById("game-button").name = "gol-ready";
@@ -422,13 +409,13 @@ function nextState(duplicate_selection) {
 	} else if (current_state == "gol-ready") {
 		console.log("user has opted to simulate game of life");
 		
-		// switch from black to red
-		var element = document.getElementById("game-button");
-		element.classList.remove("btn-dark");
-		element.classList.add("btn-light");
-		element.value = "Waiting...";
+		// switch to waiting
+		updateGameButton("btn-light", "Please make a move...");
 		
+		// change state:
 		document.getElementById("game-button").name = "make-your-move";
+		
+		
 		document.getElementById("instructions").innerHTML = "<p>Make a move by clicking on a <span style='color: black;  text-decoration: underline;'>black</span> or <span style='color: blue;  text-decoration: underline;'>blue</span> square.</p>"
 		
 		
@@ -440,15 +427,29 @@ function nextState(duplicate_selection) {
 		}, 500);	
 		
 		
-		// 
-		
 	}	else if (current_state == "make-your-move") {
 		console.log("make your move has triggered");
 		alert("Please make a selection by clicking on a black or blue square.");
 	}
+	
+	
+	
+	
+	console.log(current_state);
 }
 
 
+
+function updateGameButton(button_color, button_text){
+	var element = document.getElementById("game-button");
+		element.classList.remove("btn-primary");
+		element.classList.remove("btn-danger");
+		element.classList.remove("btn-light");
+		element.classList.remove("btn-success");
+		element.classList.remove("btn-dark");
+		element.classList.add(button_color);
+		element.value = button_text;
+}
 function newBoard() {
 	var svg = d3.select("svg");	
 	var Nt = svg.selectAll("rect").nodes().length;
