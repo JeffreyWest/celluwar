@@ -42,22 +42,30 @@
 				
 				<h3> The Rules </h3>
 				<hr>
-				<p> <span style="font-weight: bold;">CelluWar</span> is a game based on Conway's Game of Life. Cells that have 2 or 3 neighbors survive (and remain the same color). Cells with fewer than 2 or more than 3 neighbors die due to under- or over-population, respectively. Empty locations (black) that have exactly 3 neighbors reproduce a daughter cell that is the color of the majority (red or blue) in that location's neighborhood.
+				<p> <span style="font-weight: bold;">CelluWar</span> is a game based on Conway's Game of Life. To play CelluWar, you must learn the 4 rules of "Game of Life." The Game of Life is a grid of squares which contains dead or alive cells. These cells operate according to a set of rules which govern the birth and death of individual cells.
 				</p>
 				
 				<p>
-					The game has three steps: 
+					Conway's "Game of Life" has 4 rules: 
 					<ol>
-						<li><span style="font-weight: bold;">Your move</span>: select a square to turn <span style="color: red;  text-decoration: underline;">red</span>.</li>
-						<li><span style="font-weight: bold;">Computer's move</span>: computer selects a square to turn <span style="color: blue;  text-decoration: underline;">blue</span>.</li>
-						<li><span style="font-weight: bold;">Conway's move</span>: Conway's Game of Life is simulated (1 step).</li>
+						<li>Cells that have <span style="text-decoration: underline;">exactly 2 or 3 neighbors</span> survive.</li>
+						<li>Cells with <span style="text-decoration: underline;">fewer than 2 neighbors</span> die due to under-population.</li>
+						<li>Cells with <span style="text-decoration: underline;">more than 3 neighbors</span> die due to over-population.</li>
+						<li>Empty locations (black) that have <span style="text-decoration: underline;">exactly 3 neighbors</span> reproduce a daughter cell.</li>
 					</ol>
-					
-					
 				</p>
 				
 				<p>
-					The objective is to remove all the <span style="color: blue;  text-decoration: underline;">blue</span> cells from the board, while at least one <span style="color: red;  text-decoration: underline;">red</span> cell remains alive. The game can only end after the Game of Life is Simulated.
+					CelluWar is a two-player extension of Game of Life. You will play as the red cells, and the computer will play as the blue cells. Red and blue cells are born and die according the rules of Conway's Game of Life, with one exception: each player is allowed to place one cell on the board during each round. The game play is as follows:
+					<ol>
+						<li><span style="font-weight: bold;">Your move</span>: select a square to turn <span style="color: red;  font-weight: bold;">red</span>.</li>
+						<li><span style="font-weight: bold;">Computer's move</span>: computer selects a square to turn <span style="color: blue;  font-weight: bold;">blue</span>.</li>
+						<li><span style="font-weight: bold;">Conway's move</span>: Conway's Game of Life is simulated (1 step).</li>
+					</ol>					
+				</p>
+				
+				<p>
+					Your objective is to remove all the <span style="color: blue;  font-weight: bold;">blue</span> cells from the board while at least one <span style="color: red;  font-weight: bold;">red</span> cell remains alive. The game can only end after the Game of Life is Simulated.
 				</p>
 			</div>
 		</div>
@@ -68,11 +76,11 @@
 				<hr>
 				<div>
 					<label class="switch">
-					  <input type="checkbox" id="cheating" value="ON" onclick="hintToggle();">
+					  <input type="checkbox" id="cheating" value="OFF" onclick="hintToggle();">
 					  <div class="slider round"></div>
 					</label>
 				</div>
-				<p>Toggle the switch on and off, to show hints. All squares that will be dead (empty) are marked with an "x" while squares that will be alive are marked with a "✓" in the corresponding color ("<span style='color: blue;'>✓</span>" or "<span style='color: red;'>✓</span>").</p>
+				<p>The rules are a bit confusing. Toggle the switch on and off, to show hints. All squares that will be dead (empty) are marked with an "x" while squares that will be alive are marked with a "✓" in the corresponding color ("<span style='color: blue;'>✓</span>" or "<span style='color: red;'>✓</span>").</p>
 				
 				
 			</div>

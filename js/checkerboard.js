@@ -59,9 +59,8 @@ function setupBoard() {
 		      	.attr("fill", function(d) {
 			      	
 			      	if (!(d3.select(this).attr("color") == 1)) {
-				      	var button_status = document.getElementById("game-button").name;
-				      	
-				      	if ((button_status == "new-game") || (button_status == "make-your-move") || (button_status = "red-selection-made")) {
+				      	var BS = document.getElementById("game-button").name;
+				      	if ((BS == "new-game" || BS == "make-your-move") || BS == "red-selection-made") {
 					      	switchColor(1, d3.select(this), true);
 				        	countNeighbors();
 				        	document.getElementById("game-button").name = "red-selection-made";				        	
@@ -170,7 +169,7 @@ function countNeighbors() {
 	    	if (document.getElementById("cheating").value == "ON"){
 		    	var index = (d.y)*boardDimension + (d.x);
 		    	
-		    	var string = board[index].s + "-" + board[index].n;
+		    	var string = board[index].s;// + "-" + board[index].n;
 	    		    	
 		    	// change to check mark
 		    	return string;
@@ -260,22 +259,25 @@ function computerMove() {
     }
 }
 
-function removeLightReds(colors){
+function removeLights(colors){
 	// set color to old color, dark version (don't need to change 
 	var svg = d3.select("svg");
-		var boardDimension = Math.sqrt(svg.selectAll("rect").nodes().length);
-		// pass next-color into color, and change color:
-		for (let ri=0; ri<(boardDimension*boardDimension);ri++) {
-			var focal_cell = d3.select(svg.selectAll("rect").nodes()[ri]);
-			var old_color = focal_cell.attr("old-color");
-			if (old_color) {
-				console.log(old_color)
-			
+	var boardDimension = Math.sqrt(svg.selectAll("rect").nodes().length);
+	// pass next-color into color, and change color:
+	for (let ri=0; ri<(boardDimension*boardDimension);ri++) {
+		var focal_cell = d3.select(svg.selectAll("rect").nodes()[ri]);
+		var old_color = focal_cell.attr("old-color");
+		
+		if (old_color){
+			if (old_color>-1) {	
+				console.log("OC:" + old_color);
+		
 				focal_cell.style("fill",colors[old_color])
+					.attr("old-color",-1)
 					.attr("color", old_color);
 			}
-			
 		}
+	}
 }
 
 function switchColor(i, rectangle, temporary) {
@@ -284,9 +286,10 @@ function switchColor(i, rectangle, temporary) {
 	if (temporary) {
 		
 		// if this is a temp selection, remove all previous "light colored"
-		removeLightReds(colors);
+		if (i == 1){
+			removeLights(colors);
+		}
 		var old_color = rectangle.attr("color");
-		
 		
 		colors = ["#212121","#ff2f92","#0096ff"];
 		rectangle.style("fill",colors[i])
@@ -345,7 +348,7 @@ function checkGameOver() {
 
 // new game, end turn, 
 
-function nextState(duplicate_selection) {
+function nextState(from_red_click) {
 
 		
 	var current_state = document.getElementById("game-button").name;
@@ -355,29 +358,31 @@ function nextState(duplicate_selection) {
 		newBoard();
 	} else if (current_state == "red-selection-made") {
 		
-		
-		if ((document.getElementById("game-button").value == "New Game") || (document.getElementById("game-button").value == "Please make a move...") || (duplicate_selection)) {
+			
+		if (from_red_click) {
 			console.log("user has made selection but not finalized it yet");
 						
 			// switch to red
 			updateGameButton("btn-danger", "End Turn");
 			
 			// change state:
-			// ?????
+			document.getElementById("game-button").name = "red-selection-made";
 			
 			// instructions:
 			document.getElementById("instructions").innerHTML = "<p>End your turn by clicking the button above.</p>"
 			
 			
 			
-			
 		} else {
-			console.log("user has made selection and is ending their turn");
+			console.log("user has clicked 'End Turn'");
 			
 			makeAllDark();
 			
 			// switch to blue
 			updateGameButton("btn-primary", "End Computer's Turn");
+			
+			computerMove();
+			countNeighbors();
 			
 			// change state:
 			document.getElementById("game-button").name = "blue-selection-made";
@@ -385,11 +390,6 @@ function nextState(duplicate_selection) {
 			// instructions:
 			document.getElementById("instructions").innerHTML = "<p>Wait for blue to make a move, then click the button to end your opponent's turn.</p>"
 			
-			// make blue's move
-			window.setTimeout(function() {
-			  computerMove();
-			  countNeighbors();
-			}, 500);
 		}		
 	} else if (current_state == "blue-selection-made") {
 		console.log("computer has made selection and user is ending computer turn");
@@ -434,7 +434,7 @@ function nextState(duplicate_selection) {
 	
 	
 	
-	
+	current_state = document.getElementById("game-button").name;
 	console.log(current_state);
 }
 
