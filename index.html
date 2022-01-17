@@ -7,8 +7,8 @@
 		<meta name="twitter:card" content="summary_large_image">
 		<meta name="twitter:site" content="@mathoncbro">
 		<meta name="twitter:creator" content="@mathoncbro">
-		<meta name="twitter:title" content="Color Wheel of Life">
-		<meta name="twitter:description" content="The Color Wheel of Life is an interactive app that visually displays how you spend your day.">
+		<meta name="twitter:title" content="CelluWar: 2 player extension of Conway's Game of Life">
+		<meta name="twitter:description" content="The fun and challenging 2 player extension of Conway's Game of Life.">
 		<meta name="twitter:image" content="https://jeffreywest.github.io/creative-clock/screenshot.png">
 		
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -38,12 +38,29 @@
 		<h1 style="margin-bottom: 30px;"> CelluWar </h1>
 		
 		<div class="row">
-			<div class="col-lg-8 col-md-12 text-justify">
+			<div class="col-lg-8 col-md-12 offset-1 text-justify">
 				
 				<h3> The Rules </h3>
 				<hr>
-				<p> <span style="font-weight: bold;">CelluWar</span> is a game based on Conway's Game of Life. To play CelluWar, you must learn the 4 rules of "Game of Life." The Game of Life is a grid of squares which contains dead or alive cells. These cells operate according to a set of rules which govern the birth and death of individual cells.
+				
+				
+				<p>
+					CelluWar is a two-player extension of <a href="https://en.wikipedia.org/wiki/Conway's_Game_of_Life" style="color: black; text-decoration: underline;">Conway's Game of Life</a>. The game board is an 8 by 8 grid containing <span style="color: red;  font-weight: bold;">red</span> and <span style="color: blue;  font-weight: bold;">blue</span> cells. Just like cells in real life, they can divide, die, or live on to the next day. Your objective is to foster the growth of the <span style="color: red;  font-weight: bold;">red</span> cells, and inhibit the growth of the <span style="color: blue;  font-weight: bold;">blue</span> cells.
 				</p>
+					
+				<p>You will play as the <span style="color: red;  font-weight: bold;">red cells</span>, and the computer will play as the <span style="color: blue;  font-weight: bold;">blue cells</span>. The game play is as follows:
+					<ol>
+						<li><span style="font-weight: bold;">Your move</span>: click to place a <span style="color: red;  font-weight: bold;">red</span> cell on the board.</li>
+						<li><span style="font-weight: bold;">Computer's move</span>: computer places a <span style="color: blue;  font-weight: bold;">blue</span> cell on the board.</li>
+						<li><span style="font-weight: bold;">Conway's move</span>: the "Game of Life" rules are simulated to mimic birth & death.</li>
+					</ol>					
+				</p>
+				
+				<hr>
+				
+				<p> <span style="font-weight: bold;">CelluWar</span> is a game based on Conway's Game of Life. After you and your opponent have placed a single cell on the board, the cells grow, die, or survive according the rules of Conway's Game of Life.					
+				</p>
+				
 				
 				<p>
 					Conway's "Game of Life" has 4 rules: 
@@ -55,23 +72,16 @@
 					</ol>
 				</p>
 				
-				<p>
-					CelluWar is a two-player extension of Game of Life. You will play as the red cells, and the computer will play as the blue cells. Red and blue cells are born and die according the rules of Conway's Game of Life, with one exception: each player is allowed to place one cell on the board during each round. The game play is as follows:
-					<ol>
-						<li><span style="font-weight: bold;">Your move</span>: select a square to turn <span style="color: red;  font-weight: bold;">red</span>.</li>
-						<li><span style="font-weight: bold;">Computer's move</span>: computer selects a square to turn <span style="color: blue;  font-weight: bold;">blue</span>.</li>
-						<li><span style="font-weight: bold;">Conway's move</span>: Conway's Game of Life is simulated (1 step).</li>
-					</ol>					
-				</p>
+				
 				
 				<p>
-					Your objective is to remove all the <span style="color: blue;  font-weight: bold;">blue</span> cells from the board while at least one <span style="color: red;  font-weight: bold;">red</span> cell remains alive. The game can only end after the Game of Life is Simulated.
+					Your objective is to remove all the <span style="color: blue;  font-weight: bold;">blue</span> cells from the board while at least one <span style="color: red;  font-weight: bold;">red</span> cell remains alive. The game can only end after the Game of Life is simulated.
 				</p>
 			</div>
 		</div>
 
 		<div class="row" style="margin-top: 30px;">
-			<div class="col-lg-8 col-md-12 text-justify">
+			<div class="col-lg-8 offset-1 col-md-12 text-justify">
 				<h3> Enable Hints </h3>
 				<hr>
 				<div>
@@ -86,7 +96,7 @@
 			</div>
 		</div>		
 		<div class="row" style="margin-top: 30px;">
-			<div class="col-lg-8 col-md-12 text-justify" id="game-div">
+			<div class="col-lg-8 offset-1 col-md-12 text-justify" id="game-div">
 				<h3> Game Board </h3>
 				<hr>
 				
@@ -112,7 +122,7 @@
 		
 		
 		<div class="row" style="margin-bottom: 150px; margin-top: 50px;">
-			<div class="col-lg-8 col-md-12 text-justify">
+			<div class="col-lg-8 offset-1 col-md-12 text-justify">
 				This website was created by Jeffrey West in 2022.
 			</div>
 		</div>

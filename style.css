@@ -270,6 +270,46 @@ input:checked + .slider:before {
 }
 
 
-p {
-    font-size: 20px;
+p { font-size: 20px; }
+
+
+
+ 
+/*
+::::::::::::::::::::::::::::::::::::::::::::::::::::
+Bootstrap 4 breakpoints
+*/
+/* Small devices (landscape phones, 544px and up) */
+@media (min-width: 544px) {  
+p,li { font-size: 40px!important; }
 }
+ 
+/* Medium devices (tablets, 768px and up) The navbar toggle appears at this breakpoint */
+@media (min-width: 768px) {  
+p,li { font-size: 40px!important; }
+}
+ 
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) { 
+p { font-size: 20px!important; }
+li { font-size: 16px!important; }
+
+}
+ 
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {  
+p { font-size: 20px!important; }
+li { font-size: 16px!important; }
+}
+
+
+
+
+
+
+
+
+
+
+
+
