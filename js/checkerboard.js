@@ -452,19 +452,32 @@ function updateGameButton(button_color, button_text){
 }
 function newBoard() {
 	var svg = d3.select("svg");	
-	var Nt = svg.selectAll("rect").nodes().length;
-	var N0 = Math.floor(Nt*0.2);
-    
-	for (let ri=0; ri<(Nt);ri++) {
-	    // check if this element is already blue:
-	    var focal_cell = d3.select(svg.selectAll("rect").nodes()[ri]);
+	var boardDimension = Math.sqrt(svg.selectAll("rect").nodes().length);	
+
+	
+	// make sure each player has n pieces:
+	const randomArray = [];
+	for(let i = 0; i<(boardDimension*boardDimension); i++) {	
+		randomArray.push(i);
+		
+		// make all black at first:
+	    switchColor(0, d3.select(svg.selectAll("rect").nodes()[i]), false);	
+	}
+	
+	
+	shuffle(randomArray);
+	N = Math.round((boardDimension*boardDimension)*0.125);
 	    
-	    if (Math.random() < 0.25) {
-		    var color = (Math.random() < 0.5) ? 1 : 2;
-			switchColor(color , focal_cell, false);	
-	    } else {
-		    switchColor(0 , focal_cell, false);	
-	    }
+	for (let ri=0; ri<N;ri++) {
+	    // check if this element is already blue:
+	    var index_red = randomArray[ri];
+	    var index_blue = randomArray[ri+N];
+	    
+	    // red
+	    switchColor(1, d3.select(svg.selectAll("rect").nodes()[index_red]), false);	
+	    
+		// blue
+		switchColor(2, d3.select(svg.selectAll("rect").nodes()[index_blue]), false);
 	}
 	countNeighbors();
 }
@@ -473,6 +486,24 @@ function hintToggle() {
 	
 	document.getElementById("cheating").value = (myButton == "OFF") ? "ON" : "OFF";
 	countNeighbors();
+}
+
+function shuffle(array) {
+  let currentIndex = array.length,  randomIndex;
+
+  // While there remain elements to shuffle...
+  while (currentIndex != 0) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex], array[currentIndex]];
+  }
+
+  return array;
 }
 
 
